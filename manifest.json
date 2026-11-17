@@ -1,9 +1,36 @@
 {
   "plugin_id": "chronicle.plugin.wikidata",
   "name": "Wikidata",
-  "version": "1.0.0",
-  "author": "thegoddamnbeckster",
-  "entry_type": "metadata",
-  "min_chronicle_version": "1.0.0",
-  "supported_media_types": ["music", "album", "artist"]
+  "version": "1.1.0",
+  "author": "Chronicle Contributors",
+  "description": "Finds a movie, show, album, book, game or person on Wikidata by an id Chronicle already has (IMDb, TMDB, TheTVDB, TVmaze, MusicBrainz, Steam, IGDB, Open Library) and adds the other ids it holds, other-language names, release year, genres, the people and companies credited, and its images; for a person, birth and death dates and the portrait. Works on its own: no key, no account, no other plugin needed. Wikidata's data is CC0.",
+  "min_chronicle_version": "0.20.66",
+  "call_timeout_seconds": 3600,
+  "entry_type": "Chronicle.Plugin.Wikidata.WikidataMetadataProvider",
+  "sourceUrls": [
+    {
+      "match": "^wikidata:(Q[0-9]+)$",
+      "url": "https://www.wikidata.org/wiki/$1"
+    }
+  ],
+  "fixMatchHint": "Paste a Wikidata address (https://www.wikidata.org/wiki/Q118645527) or an item id: Q118645527 or wikidata:Q118645527.",
+  "iconUrl": "https://www.wikidata.org/static/favicon/wikidata.ico",
+  "brandColorLight": "#006699",
+  "brandColorDark": "#5fb3dd",
+  "background_tasks": [
+    {
+      "task_id": "fetch-missing-metadata",
+      "display_name": "Fetch Missing Metadata",
+      "description": "Looks up Wikidata for movies, shows, music, books and games that carry an id Wikidata can be found by (IMDb, TMDB, TheTVDB, TVmaze, MusicBrainz, Steam, IGDB, Open Library) and have no Wikidata data yet. About 3 to 8 seconds per item, because Wikidata is asked for one thing at a time, at least a second apart.",
+      "default_cron": "22,52 * * * *",
+      "default_enabled": true
+    },
+    {
+      "task_id": "resync-all-metadata",
+      "display_name": "Re-sync All Metadata",
+      "description": "Re-downloads Wikidata data for every matched item to refresh names, ids and images. Slow for a large library (several seconds per item); an interruption starts again from the beginning next time.",
+      "default_cron": "52 3 * * 0",
+      "default_enabled": false
+    }
+  ]
 }
